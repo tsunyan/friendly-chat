@@ -1,0 +1,43 @@
+name: release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check that the tag matches metadata.version
+        run: |
+          version=$(sed -n 's/^  version: "\(.*\)"$/\1/p' skills/friendly-chat/SKILL.md)
+          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match metadata.version (${version}) in SKILL.md"
+            exit 1
+          fi
+
+      - name: Build friendly-chat.zip
+        # claude.ai expects the skill folder itself at the top level of the ZIP.
+        working-directory: skills
+        run: |
+          zip -r -X "$RUNNER_TEMP/friendly-chat.zip" friendly-chat
+          unzip -l "$RUNNER_TEMP/friendly-chat.zip"
+
+      - name: Create the release, or update its asset on a re-run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" "$RUNNER_TEMP/friendly-chat.zip" --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" "$RUNNER_TEMP/friendly-chat.zip" \
+              --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
+          fi
