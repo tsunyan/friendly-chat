@@ -73,11 +73,11 @@ npx skills add tsunyan/friendly-chat
 
 ### claude.ai で使う
 
-1. [最新のリリース](https://github.com/tsunyan/friendly-chat/releases/latest)から `friendly-chat.zip` をダウンロードします。展開する必要はありません。
+1. [最新のリリース](https://github.com/tsunyan/friendly-chat/releases/latest)から `friendly-chat-v1.0.0.skill` のような `.skill` ファイルをダウンロードします。
 2. 個人のプランでは、Settings > Capabilities で「Code execution and file creation」（新しい設定画面では「Create and edit files」）を有効にします。
-3. Customize > Skills で「+」→「Create skill」→「Upload a skill」を選び、`friendly-chat.zip` をアップロードします。
+3. Customize > Skills で「+」→「Create skill」→「Upload a skill」を選び、ダウンロードした `.skill` ファイルをアップロードします。
 
-画面の名前は変わることがあります。Team や Enterprise のプランでの設定も含めて、詳しくは [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude) を見てください。
+`.skill` ファイルの中身は ZIP です。Claude のドキュメントは ZIP ファイルのアップロードを案内しているので、`.skill` ファイルを受け付けないときは、拡張子を `.zip` に変えてアップロードしてください。画面の名前は変わることがあります。Team や Enterprise のプランでの設定も含めて、詳しくは [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude) を見てください。
 
 ## 常に使わせたいとき
 

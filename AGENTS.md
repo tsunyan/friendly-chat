@@ -10,7 +10,9 @@
 
 - main には直接 push できない。ブランチを切り、PR でマージする。PR では `gitleaks` と `skill-format` のチェックが通る必要がある。
 - コミットメッセージは、英語の Conventional Commits で書く（`feat:`、`fix:`、`docs:` など）。スキルの振る舞いが変わる変更は `feat:` か `fix:` にする。
-- 版を上げるときは、SKILL.md の `metadata.version` を変える PR をマージしてから、同じ値のタグ（`v1.2.3` の形）を main に付けて push する。タグの push で、`friendly-chat.zip`（claude.ai に取り込む形）を添付したリリースが作られる。タグと `metadata.version` が食い違うと、リリースの作成は失敗する。公開したタグは付け替えない。
+- 版を上げるときは、SKILL.md の `metadata.version` を変える PR をマージしてから、同じ値の注釈付きタグ（`v1.2.3` の形）を main に付けて push する。タグのメッセージには、日本語のリリースノートを Markdown で書く（`git tag -a v1.2.3 --cleanup=verbatim -F notes.md`）。
+- タグの push で、タグのメッセージを本文にし、`friendly-chat-v1.2.3.skill`（claude.ai に取り込む ZIP）を添付したリリースが作られる。注釈のないタグや、`metadata.version` と食い違うタグでは、リリースの作成は失敗する。公開したタグは付け替えない。
+- このリポジトリの文書（README、AGENTS.md、PR の説明、リリースノート）は日本語で書く。スキルが日本語向けだからだ。
 - SKILL.md と README の日本語は、スキル自身の書き方に従う（漢字をひらく、指す先を推測させない、など）。
 
 ## Code Review Rules

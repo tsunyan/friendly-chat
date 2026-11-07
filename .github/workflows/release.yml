@@ -11,6 +11,9 @@ jobs:
   release:
     name: release
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.ref_name }}
+      ASSET: friendly-chat-${{ github.ref_name }}.skill
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -19,25 +22,41 @@ jobs:
       - name: Check that the tag matches metadata.version
         run: |
           version=$(sed -n 's/^  version: "\(.*\)"$/\1/p' skills/friendly-chat/SKILL.md)
-          if [ "v${version}" != "${GITHUB_REF_NAME}" ]; then
-            echo "::error::Tag ${GITHUB_REF_NAME} does not match metadata.version (${version}) in SKILL.md"
+          if [ "v${version}" != "${TAG}" ]; then
+            echo "::error::Tag ${TAG} does not match metadata.version (${version}) in SKILL.md"
             exit 1
           fi
 
-      - name: Build friendly-chat.zip
-        # claude.ai expects the skill folder itself at the top level of the ZIP.
+      - name: Build the .skill file
+        # A .skill file is a ZIP archive. claude.ai expects the skill folder itself at its top level.
         working-directory: skills
         run: |
-          zip -r -X "$RUNNER_TEMP/friendly-chat.zip" friendly-chat
-          unzip -l "$RUNNER_TEMP/friendly-chat.zip"
+          zip -r -X "$RUNNER_TEMP/$ASSET" friendly-chat
+          unzip -l "$RUNNER_TEMP/$ASSET"
 
-      - name: Create the release, or update its asset on a re-run
+      - name: Read the release notes from the tag message
+        # Read the annotation through the API: actions/checkout may turn annotated tags into lightweight ones.
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "$RUNNER_TEMP/friendly-chat.zip" --repo "$GITHUB_REPOSITORY" --clobber
+          type=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq .object.type)
+          if [ "$type" != "tag" ]; then
+            echo "::error::$TAG is not an annotated tag. Write the release notes in the tag message (git tag -a)."
+            exit 1
+          fi
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$TAG" --jq .object.sha)
+          gh api "repos/$GITHUB_REPOSITORY/git/tags/$sha" --jq .message \
+            | sed '/^-----BEGIN [A-Z ]*SIGNATURE-----$/,$d' > "$RUNNER_TEMP/notes.md"
+          cat "$RUNNER_TEMP/notes.md"
+
+      - name: Create the release, or update it on a re-run
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            gh release upload "$TAG" "$RUNNER_TEMP/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file "$RUNNER_TEMP/notes.md"
           else
-            gh release create "$GITHUB_REF_NAME" "$RUNNER_TEMP/friendly-chat.zip" \
-              --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --generate-notes --verify-tag
+            gh release create "$TAG" "$RUNNER_TEMP/$ASSET" --repo "$GITHUB_REPOSITORY" \
+              --title "friendly-chat $TAG" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
           fi
