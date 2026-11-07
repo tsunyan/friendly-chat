@@ -71,13 +71,19 @@ npx skills add tsunyan/friendly-chat
 
 ほかのエージェントでは、それぞれのドキュメントにあるスキルの置き場所に置いてください。
 
+### Codex のアプリで使う
+
+[最新のリリース](https://github.com/tsunyan/friendly-chat/releases/latest)から `friendly-chat-v1.0.0.skill` のような `.skill` ファイルをダウンロードし、ダブルクリックして開くと取り込めます。
+
 ### claude.ai で使う
 
-1. [最新のリリース](https://github.com/tsunyan/friendly-chat/releases/latest)から `friendly-chat-v1.0.0.skill` のような `.skill` ファイルをダウンロードします。
-2. 個人のプランでは、Settings > Capabilities で「Code execution and file creation」（新しい設定画面では「Create and edit files」）を有効にします。
-3. Customize > Skills で「+」→「Create skill」→「Upload a skill」を選び、ダウンロードした `.skill` ファイルをアップロードします。
+claude.ai では、スキルをプラグインとして取り込みます。プラグインは有料のプラン（Pro、Max、Ultra、Team、Enterprise）で使えます。
 
-`.skill` ファイルの中身は ZIP です。Claude のドキュメントは ZIP ファイルのアップロードを案内しているので、`.skill` ファイルを受け付けないときは、拡張子を `.zip` に変えてアップロードしてください。画面の名前は変わることがあります。Team や Enterprise のプランでの設定も含めて、詳しくは [Use skills in Claude](https://support.claude.com/en/articles/12512180-use-skills-in-claude) を見てください。
+1. [最新のリリース](https://github.com/tsunyan/friendly-chat/releases/latest)から `friendly-chat-v1.0.0-claude-plugin.zip` のような、名前が `-claude-plugin.zip` で終わるファイルをダウンロードします。`.skill` ファイルは、claude.ai のプラグインの画面では取り込めません。
+2. 個人のプランでは、Settings > Capabilities で「Code execution and file creation」（新しい設定画面では「Create and edit files」）を有効にします。
+3. サイドバーの「プラグイン」（切り替え前の画面では Customize > Plugins）で、ダウンロードした ZIP をプラグインのファイルとしてアップロードします。
+
+取り込むと、「Friendly chat」という名前のプラグインとして追加されます。中身はこのスキル 1 つだけです。画面の名前は変わることがあります。詳しくは [Use plugins in Claude](https://support.claude.com/en/articles/13837440-use-plugins-in-claude) を見てください。
 
 ## 常に使わせたいとき
 
