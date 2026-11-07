@@ -47,3 +47,6 @@ jobs:
 
       - name: Check Claude-specific constraints
         run: python3 .github/scripts/check_skill_frontmatter.py skills/*/SKILL.md
+
+      - name: Check the Claude plugin manifest
+        run: python3 .github/scripts/check_plugin_manifest.py .claude-plugin/plugin.json skills/*/SKILL.md
