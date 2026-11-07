@@ -1,0 +1,10 @@
+{
+  "name": "friendly-chat",
+  "version": "1.0.0",
+  "description": "職場のチャットで人に送る日本語のメッセージを、読み手の負荷が小さくなる形に整えるスキル",
+  "author": {
+    "name": "tsunyan"
+  },
+  "repository": "https://github.com/tsunyan/friendly-chat",
+  "license": "MIT"
+}

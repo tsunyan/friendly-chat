@@ -13,26 +13,38 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TAG: ${{ github.ref_name }}
-      ASSET: friendly-chat-${{ github.ref_name }}.skill
+      SKILL_ASSET: friendly-chat-${{ github.ref_name }}.skill
+      PLUGIN_ASSET: friendly-chat-${{ github.ref_name }}-claude-plugin.zip
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
 
-      - name: Check that the tag matches metadata.version
+      - name: Check that the tag matches the versions in SKILL.md and plugin.json
         run: |
           version=$(sed -n 's/^  version: "\(.*\)"$/\1/p' skills/friendly-chat/SKILL.md)
           if [ "v${version}" != "${TAG}" ]; then
             echo "::error::Tag ${TAG} does not match metadata.version (${version}) in SKILL.md"
             exit 1
           fi
+          plugin_version=$(jq -r .version .claude-plugin/plugin.json)
+          if [ "v${plugin_version}" != "${TAG}" ]; then
+            echo "::error::Tag ${TAG} does not match version (${plugin_version}) in .claude-plugin/plugin.json"
+            exit 1
+          fi
 
-      - name: Build the .skill file
-        # A .skill file is a ZIP archive. claude.ai expects the skill folder itself at its top level.
+      - name: Build the .skill file for Codex
+        # A .skill file is a ZIP archive with the skill folder itself at its top level.
         working-directory: skills
         run: |
-          zip -r -X "$RUNNER_TEMP/$ASSET" friendly-chat
-          unzip -l "$RUNNER_TEMP/$ASSET"
+          zip -r -X "$RUNNER_TEMP/$SKILL_ASSET" friendly-chat
+          unzip -l "$RUNNER_TEMP/$SKILL_ASSET"
+
+      - name: Build the plugin ZIP for claude.ai
+        # claude.ai takes plugins, not bare skill folders: .claude-plugin/plugin.json must be at the top level.
+        run: |
+          zip -r -X "$RUNNER_TEMP/$PLUGIN_ASSET" .claude-plugin skills
+          unzip -l "$RUNNER_TEMP/$PLUGIN_ASSET"
 
       - name: Read the release notes from the tag message
         # Read the annotation through the API: actions/checkout may turn annotated tags into lightweight ones.
@@ -54,9 +66,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
-            gh release upload "$TAG" "$RUNNER_TEMP/$ASSET" --repo "$GITHUB_REPOSITORY" --clobber
+            gh release upload "$TAG" "$RUNNER_TEMP/$SKILL_ASSET" "$RUNNER_TEMP/$PLUGIN_ASSET" \
+              --repo "$GITHUB_REPOSITORY" --clobber
             gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --notes-file "$RUNNER_TEMP/notes.md"
           else
-            gh release create "$TAG" "$RUNNER_TEMP/$ASSET" --repo "$GITHUB_REPOSITORY" \
+            gh release create "$TAG" "$RUNNER_TEMP/$SKILL_ASSET" "$RUNNER_TEMP/$PLUGIN_ASSET" \
+              --repo "$GITHUB_REPOSITORY" \
               --title "friendly-chat $TAG" --notes-file "$RUNNER_TEMP/notes.md" --verify-tag
           fi

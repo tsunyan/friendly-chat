@@ -4,6 +4,7 @@
 
 - スキルの本体: `skills/friendly-chat/SKILL.md`
 - 利用者向けの説明: `README.md`
+- claude.ai のプラグインとしての定義: `.claude-plugin/plugin.json`（リポジトリ全体が 1 つのプラグインになる）
 - 形式とクレデンシャルのチェック: `.github/workflows/checks.yml`
 
 ## リポジトリの決まり
@@ -11,8 +12,10 @@
 - main には直接 push できない。ブランチを切り、PR でマージする。PR では `gitleaks` と `skill-format` のチェックが通る必要がある。
 - ブランチ名は英語（ASCII）で、`<種類>/<短い説明>` の形にする（`feat/split-deadlines`、`docs/update-readme` など）。種類はコミットメッセージとそろえる。日本語のブランチ名は、URL の中で読めなくなり、シェルや一部のツールでも扱いにくいため使わない。
 - コミットメッセージと PR のタイトルは、Conventional Commits の種類（`feat:`、`fix:`、`docs:`、`ci:` など）を英語で書き、説明を日本語で書く（`feat: 返事の期限と作業の期限を分けるコツを追加`）。スキルの振る舞いが変わる変更は `feat:` か `fix:` にする。この決まりより前のコミットは英語で書いてあるが、書き換えない。
-- 版を上げるときは、SKILL.md の `metadata.version` を変える PR をマージしてから、同じ値の注釈付きタグ（`v1.2.3` の形）を main に付けて push する。タグのメッセージには、日本語のリリースノートを Markdown で書く（`git tag -a v1.2.3 --cleanup=verbatim -F notes.md`）。
-- タグの push で、タグのメッセージを本文にし、`friendly-chat-v1.2.3.skill`（claude.ai に取り込む ZIP）を添付したリリースが作られる。注釈のないタグや、`metadata.version` と食い違うタグでは、リリースの作成は失敗する。公開したタグは付け替えない。
+- 版を上げるときは、SKILL.md の `metadata.version` と `.claude-plugin/plugin.json` の `version` を同じ値に変える PR をマージしてから、同じ値の注釈付きタグ（`v1.2.3` の形）を main に付けて push する。2 つの version が食い違うと、`skill-format` のチェックが失敗する。タグのメッセージには、日本語のリリースノートを Markdown で書く（`git tag -a v1.2.3 --cleanup=verbatim -F notes.md`）。
+- タグの push で、タグのメッセージを本文にし、次の 2 つを添付したリリースが作られる。注釈のないタグや、2 つの version と食い違うタグでは、リリースの作成は失敗する。公開したタグは付け替えない。
+  - `friendly-chat-v1.2.3.skill`: Codex のアプリで開いて取り込む ZIP。スキルのフォルダが一番上にある
+  - `friendly-chat-v1.2.3-claude-plugin.zip`: claude.ai に取り込むプラグインの ZIP。`.claude-plugin/plugin.json` と `skills/` が一番上にある
 - このリポジトリの文書（README、AGENTS.md、PR の説明、リリースノート）は日本語で書く。スキルが日本語向けだからだ。
 - SKILL.md と README の日本語は、スキル自身の書き方に従う（漢字をひらく、指す先を推測させない、など）。
 
