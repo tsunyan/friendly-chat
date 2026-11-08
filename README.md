@@ -6,10 +6,10 @@
 </h1>
 
 <p align="center">
-  <a href="https://github.com/tsunyan/friendly-chat/releases/latest"><img src="https://img.shields.io/github/v/release/tsunyan/friendly-chat?color=ff6f98" alt="最新のリリース"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/github/license/tsunyan/friendly-chat?color=ff9ab6" alt="ライセンス: MIT"></a>
-  <a href="https://agentskills.io/"><img src="https://img.shields.io/badge/Agent_Skills-SKILL.md-ff9ab6" alt="Agent Skills の形式"></a>
-  <a href="#インストール"><img src="https://img.shields.io/badge/works_with-Claude_Code_%C2%B7_Codex_%C2%B7_claude.ai-ff6f98" alt="対応: Claude Code、Codex、claude.ai"></a>
+  <a href="https://github.com/tsunyan/friendly-chat/releases/latest"><img src="https://img.shields.io/github/v/release/tsunyan/friendly-chat?color=bc6782" alt="最新のリリース"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/tsunyan/friendly-chat?color=cd7d97" alt="ライセンス: MIT"></a>
+  <a href="https://agentskills.io/"><img src="https://img.shields.io/badge/Agent_Skills-SKILL.md-cd7d97" alt="Agent Skills の形式"></a>
+  <a href="#インストール"><img src="https://img.shields.io/badge/works_with-Claude_Code_%C2%B7_Codex_%C2%B7_claude.ai-bc6782" alt="対応: Claude Code、Codex、claude.ai"></a>
 </p>
 
 職場のチャットで人に送る日本語のメッセージを、読み手の負荷が小さくなる形に整える、AI エージェント向けのスキルです。[Agent Skills](https://agentskills.io/) の形式（`SKILL.md`）で書いているので、Claude Code、Codex など、この形式に対応したエージェントで使えます。
