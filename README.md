@@ -1,6 +1,27 @@
-# friendly-chat
+<h1 align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+    <img src="assets/banner-light.svg" alt="friendly-chat: 職場のチャットを、読み手にやさしく" width="880">
+  </picture>
+</h1>
+
+<p align="center">
+  <a href="https://github.com/tsunyan/friendly-chat/releases/latest"><img src="https://img.shields.io/github/v/release/tsunyan/friendly-chat?color=bc6782" alt="最新のリリース"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/github/license/tsunyan/friendly-chat?color=cd7d97" alt="ライセンス: MIT"></a>
+  <a href="https://agentskills.io/"><img src="https://img.shields.io/badge/Agent_Skills-SKILL.md-cd7d97" alt="Agent Skills の形式"></a>
+  <a href="#インストール"><img src="https://img.shields.io/badge/works_with-Claude_Code_%C2%B7_Codex_%C2%B7_claude.ai-bc6782" alt="対応: Claude Code、Codex、claude.ai"></a>
+</p>
 
 職場のチャットで人に送る日本語のメッセージを、読み手の負荷が小さくなる形に整える、AI エージェント向けのスキルです。[Agent Skills](https://agentskills.io/) の形式（`SKILL.md`）で書いているので、Claude Code、Codex など、この形式に対応したエージェントで使えます。
+
+## 整える前と後
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/before-after-dark.svg">
+  <img src="assets/before-after-light.svg" alt="整える前は、「お疲れ様です」「今ちょっと良いですか？」だけを送り、返事を 13 分待ってから、用件と期限を最後に書いたメッセージを送っている。整えた後は、1 通で「【依頼】リリース手順書の確認」と何の連絡かを先に書き、期限を 11/12（木）中と日付で書いて、3 分後に返事が来ている。" width="880">
+</picture>
+
+整える前は、あいさつだけを送って相手を待たせ、用件と期限を最後に書いています。期限があるのに「お手すきの時に」と書いているので、急ぎかどうかも伝わりません。整えた後は、1 通で何の連絡かを先に書き、期限を日付で書いているので、相手はすぐに返事ができます。
 
 ## 対象
 
